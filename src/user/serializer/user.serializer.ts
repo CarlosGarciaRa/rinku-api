@@ -13,31 +13,10 @@ export class UserSerializer {
   updatedAt: Date;
 
   @Expose()
-  email: string;
+  employeeNumber: string;
 
   @Expose()
-  title: string;
-
-  @Expose()
-  username: string;
-
-  @Expose()
-  firstName: string;
-
-  @Expose()
-  lastName: string;
-
-  @Expose()
-  birthday: Date;
-
-  @Expose()
-  biography: string;
-
-  @Expose()
-  profilePictureUrl: string;
-
-  @Expose()
-  resumeUrl: string;
+  name: string;
 
   @Expose()
   @ApiProperty({ enum: Role })

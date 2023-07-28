@@ -2,43 +2,31 @@ import {
   IsString,
   IsDate,
   IsNotEmpty,
-  IsArray,
   IsOptional,
   ValidateIf,
+  IsInt,
 } from 'class-validator';
 import { Transform, Type } from 'class-transformer';
 import { IsFileType, MaxFileSize } from 'src/decorators/files';
+import { Role } from '@prisma/client';
 
+export class CreateUserDto {
+  @IsString()
+  @IsNotEmpty()
+  name: string;
+
+  @IsString()
+  @IsNotEmpty()
+  role: Role;
+}
 export class EditUserDto {
   @IsString()
   @IsNotEmpty()
-  id: string;
+  name: string;
 
   @IsString()
   @IsNotEmpty()
-  firstName: string;
-
-  @IsOptional()
-  @IsNotEmpty()
-  title: string;
-
-  @IsString()
-  @IsNotEmpty()
-  @Transform(({ value }) => value.toLowerCase().replaceAll(' ', ''))
-  username: string;
-
-  @IsString()
-  @IsNotEmpty()
-  lastName: string;
-
-  @IsString()
-  @IsNotEmpty()
-  biography: string;
-
-  @IsNotEmpty()
-  @IsDate()
-  @Transform(({ value }) => new Date(value))
-  birthday: Date;
+  role: Role;
 }
 
 export class FilesDto {
