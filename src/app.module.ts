@@ -9,6 +9,7 @@ import { UserModule } from './user/user.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { join } from 'path';
 import { FileModule } from './file/file.module';
+import { DeliveryModule } from './delivery/delivery.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
@@ -33,6 +34,7 @@ import { FileModule } from './file/file.module';
 
     PrismaModule,
     FileModule,
+    DeliveryModule,
   ],
   controllers: [AppController],
   providers: [AppService],
