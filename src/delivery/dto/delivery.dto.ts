@@ -19,9 +19,9 @@ export class EditDeliveryDto {
   @IsNotEmpty()
   userId: string;
 
-  @IsString()
+  @IsInt()
   @IsNotEmpty()
-  number: string;
+  number: number;
 
   @IsDate()
   @Transform(({ value }) => new Date(value))

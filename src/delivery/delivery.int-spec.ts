@@ -70,8 +70,48 @@ describe('skillController Int', () => {
         .send(delivery);
       expect(response.status).toBe(404);
     });
-    it.todo('should edit delivery');
-    it.todo('should delete delivery');
+    it('should edit delivery', async () => {
+      const deliveryId: string = (await prisma.delivery.findFirst()).id;
+      const delivery: CreateDeliveryDto = {
+        date: dayjs('2023/09/01').toDate(),
+        number: 10,
+        userId: user.id,
+      };
+      const response = await request(app.getHttpServer())
+        .patch(`/deliveries/${deliveryId}`)
+        .send(delivery);
+      expect(response.status).toBe(200);
+      expect(response.body.id).toBeDefined();
+      expect(response.body.createdAt).toBeDefined();
+      expect(response.body.updatedAt).toBeDefined();
+      expect(response.body.number).toBe(10);
+      expect(response.body.date).toBeDefined();
+      expect(response.body.user).toBeDefined();
+    });
+    it('should throw on edit non exisiting delivery', async () => {
+      const delivery: CreateDeliveryDto = {
+        date: dayjs('2023/09/01').toDate(),
+        number: 10,
+        userId: user.id,
+      };
+      const response = await request(app.getHttpServer())
+        .patch(`/deliveries/${123}`)
+        .send(delivery);
+      expect(response.status).toBe(404);
+    });
+    it('should delete delivery', async () => {
+      const deliveryId: string = (await prisma.delivery.findFirst()).id;
+      const response = await request(app.getHttpServer()).delete(
+        `/deliveries/${deliveryId}`,
+      );
+      expect(response.status).toBe(200);
+    });
+    it('should throw on delete non existing delivery', async () => {
+      const response = await request(app.getHttpServer()).delete(
+        `/deliveries/${124}`,
+      );
+      expect(response.status).toBe(404);
+    });
   });
   // describe('Get users', () => {
   //   it('should fetch users', async () => {
