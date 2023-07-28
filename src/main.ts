@@ -18,8 +18,8 @@ async function bootstrap() {
   );
 
   const config = new DocumentBuilder()
-    .setTitle('DOCS')
-    .setDescription('Description:')
+    .setTitle('RINKU DOCS')
+    .setDescription('Rinku REST API')
     .setVersion('0.1')
     .build();
   const document = SwaggerModule.createDocument(app, config);
