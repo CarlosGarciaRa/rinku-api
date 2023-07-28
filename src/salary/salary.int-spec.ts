@@ -66,6 +66,13 @@ describe('skillController Int', () => {
       expect(response.body[0].date).toBeDefined();
       expect(response.body[0].user).toBeDefined();
       expect(response.body[0].monthSalary).toBeDefined();
+      expect(response.body[0].deliveriesBonus).toBeDefined();
+      expect(response.body[0].bonusByRole).toBeDefined();
+      expect(response.body[0].subtotalSalary).toBeDefined();
+      expect(response.body[0].isrRetained).toBeDefined();
+      expect(response.body[0].isrPercentage).toBeDefined();
+      expect(response.body[0].vouchers).toBeDefined();
+      expect(response.body[0].totalSalary).toBeDefined();
     });
     it('should fetch all salaries from user', async () => {
       const response = await request(app.getHttpServer())
@@ -80,6 +87,13 @@ describe('skillController Int', () => {
       expect(response.body[0].date).toBeDefined();
       expect(response.body[0].user).toBeDefined();
       expect(response.body[0].monthSalary).toBeDefined();
+      expect(response.body[0].deliveriesBonus).toBeDefined();
+      expect(response.body[0].bonusByRole).toBeDefined();
+      expect(response.body[0].subtotalSalary).toBeDefined();
+      expect(response.body[0].isrRetained).toBeDefined();
+      expect(response.body[0].isrPercentage).toBeDefined();
+      expect(response.body[0].vouchers).toBeDefined();
+      expect(response.body[0].totalSalary).toBeDefined();
     });
     it('should fetch all salaries from at a given date', async () => {
       const response = await request(app.getHttpServer())
@@ -94,6 +108,13 @@ describe('skillController Int', () => {
       expect(response.body[0].date).toBeDefined();
       expect(response.body[0].user).toBeDefined();
       expect(response.body[0].monthSalary).toBeDefined();
+      expect(response.body[0].deliveriesBonus).toBeDefined();
+      expect(response.body[0].bonusByRole).toBeDefined();
+      expect(response.body[0].subtotalSalary).toBeDefined();
+      expect(response.body[0].isrRetained).toBeDefined();
+      expect(response.body[0].isrPercentage).toBeDefined();
+      expect(response.body[0].vouchers).toBeDefined();
+      expect(response.body[0].totalSalary).toBeDefined();
     });
   });
 });
