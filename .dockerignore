@@ -1,0 +1,16 @@
+# Archivos y carpetas generados por npm/yarn
+node_modules
+npm-debug.log
+yarn-error.log
+**/node_modules
+
+# Archivos de compilación de TypeScript
+dist/
+
+# Archivos de configuración de NestJS
+.env
+
+# Otros archivos y carpetas que no son necesarios en el contenedor
+.git/
+.vscode/
+coverage/
