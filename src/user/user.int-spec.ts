@@ -7,19 +7,11 @@ import * as request from 'supertest';
 import * as dayjs from 'dayjs';
 import { AuthService } from 'src/auth/auth.service';
 import { Role } from '@prisma/client';
+import { CreateUserDto } from './dto';
 
 describe('skillController Int', () => {
   let app: INestApplication;
   let prisma: PrismaService;
-  let authService: AuthService;
-  let userToken: string;
-  let user: any;
-  // let adminToken: string;
-  // let admin: any;
-  let skillOne;
-  let skillTwo;
-  let languageOne;
-  let languageTwo;
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -27,7 +19,6 @@ describe('skillController Int', () => {
     }).compile();
 
     prisma = moduleRef.get(PrismaService);
-    authService = moduleRef.get(AuthService);
     app = moduleRef.createNestApplication();
     app.useGlobalPipes(
       new ValidationPipe({
@@ -36,35 +27,6 @@ describe('skillController Int', () => {
     );
     await app.init();
     await prisma.cleantDbForTesting();
-    const userData = {
-      firstName: 'Usuario',
-      lastName: 'Last',
-      email: 'user@email.com',
-      username: 'flowery',
-      hash: '12345678',
-      biography: 'Biogragfia',
-      title: 'Dev',
-      birthday: dayjs('08-10-1998').toDate(),
-      activeStatus: true,
-      isEmailConfirmed: true,
-      role: Role.user,
-    };
-    // const adminData = {
-    //   firstName: 'Admin',
-    //   lastName: 'Last',
-    //   email: 'admin@email.com',
-    //   hash: '12345678',
-    //   birthday: dayjs('08-10-1998').toDate(),
-    //   activeStatus: true,
-    //   isEmailConfirmed: true,
-    //   role: Role.admin,
-    // };
-
-    user = await prisma.user.create({ data: userData });
-    userToken = await authService.signToken(user.id, user.email);
-
-    // admin = await prisma.user.create({ data: adminData });
-    // adminToken = await authService.signToken(admin.id, admin.email);
   });
 
   afterAll(async () => {
@@ -72,64 +34,63 @@ describe('skillController Int', () => {
     await app.close();
   });
 
-  describe('Edit user data', () => {
-    it('should edit own user', async () => {
+  describe('User CRUD', () => {
+    it('should create user', async () => {
+      const user: CreateUserDto = {
+        name: 'Ususario dummy',
+        role: 'driver',
+      };
       const response = await request(app.getHttpServer())
-        .patch(`/users/me`)
-        .auth(userToken, { type: 'bearer' })
-        .send({
-          ...user,
-          firstName: 'Usuario Editado',
-          username: 'FlowerY2   virus',
-        });
-      expect(response.status).toBe(200);
-      expect(response.body.firstName).toBe('Usuario Editado');
-      expect(response.body.username).toBe('flowery2virus');
-      expect(response.body.lastName).toBeDefined();
-      expect(response.body.username).toBeDefined();
-      expect(response.body.hash).not.toBeDefined();
+        .post(`/users`)
+        .send(user);
+      expect(response.status).toBe(201);
+      expect(response.body.id).toBeDefined();
+      expect(response.body.employeeNumber).toBeDefined();
+      expect(response.body.createdAt).toBeDefined();
+      expect(response.body.updatedAt).toBeDefined();
+      expect(response.body.name).toBeDefined();
+      expect(response.body.role).toBeDefined();
     });
-    it('should not update email', async () => {
+    it('should edit user', async () => {
+      const userId = (await prisma.user.findFirst()).id;
+      const user: CreateUserDto = {
+        name: 'Usuario dummy Editado',
+        role: 'auxiliares',
+      };
       const response = await request(app.getHttpServer())
-        .patch(`/users/me`)
-        .auth(userToken, { type: 'bearer' })
-        .send({
-          ...user,
-          firstName: 'Usuario Editado 2',
-          email: 'emailEditado@email.com',
-        });
+        .patch(`/users/${userId}`)
+        .send(user);
       expect(response.status).toBe(200);
-      expect(response.body.email).toBe('user@email.com');
-      expect(response.body.firstName).toBe('Usuario Editado 2');
-      expect(response.body.lastName).toBeDefined();
-      expect(response.body.username).toBeDefined();
-      expect(response.body.hash).not.toBeDefined();
+      expect(response.body.id).toBeDefined();
+      expect(response.body.employeeNumber).toBeDefined();
+      expect(response.body.createdAt).toBeDefined();
+      expect(response.body.updatedAt).toBeDefined();
+      expect(response.body.name).toBeDefined();
+      expect(response.body.role).toBeDefined();
     });
-  });
-
-  describe('Get user profile', () => {
-    it('should fetch own profile', async () => {
-      const response = await request(app.getHttpServer())
-        .get(`/users/me`)
-        .auth(userToken, { type: 'bearer' });
+    it('should fetch users', async () => {
+      const response = await request(app.getHttpServer()).get(`/users`);
       expect(response.status).toBe(200);
-      expect(response.body.firstName).toBe('Usuario Editado');
-      expect(response.body.lastName).toBeDefined();
-      expect(response.body.username).toBeDefined();
-      expect(response.body.biography).toBeDefined();
-      expect(response.body.hash).not.toBeDefined();
-    });
-    it('should fetch profile based on username', async () => {
-      const response = await request(app.getHttpServer())
-        .get(`/users/flowery`)
-        .auth(userToken, { type: 'bearer' });
-      expect(response.status).toBe(200);
-      expect(response.body.firstName).toBe('Usuario Editado');
-      expect(response.body.username).toBe('flowery');
-      expect(response.body.lastName).toBeDefined();
-      expect(response.body.username).toBeDefined();
-      expect(response.body.biography).toBeDefined();
-      expect(response.body.hash).not.toBeDefined();
+      expect(response.body.length).toBeGreaterThan(0);
+      expect(response.body[0].id).toBeDefined();
+      expect(response.body[0].employeeNumber).toBeDefined();
+      expect(response.body[0].createdAt).toBeDefined();
+      expect(response.body[0].updatedAt).toBeDefined();
+      expect(response.body[0].name).toBe('Usuario dummy Editado');
+      expect(response.body[0].role).toBe(Role.auxiliares);
     });
   });
+  // describe('Get users', () => {
+  //   it('should fetch users', async () => {
+  //     const response = await request(app.getHttpServer()).get(`/users`);
+  //     expect(response.status).toBe(200);
+  //     expect(response.body.length).toBeGreaterThan(0);
+  //     expect(response.body[0].id).toBeDefined();
+  //     expect(response.body[0].employeeNumber).toBeDefined();
+  //     expect(response.body[0].createdAt).toBeDefined();
+  //     expect(response.body[0].updatedAt).toBeDefined();
+  //     expect(response.body[0].name).toBeDefined();
+  //     expect(response.body[0].role).toBeDefined();
+  //   });
+  // });
 });

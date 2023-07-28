@@ -33,4 +33,9 @@ export class UserController {
   createUser(@Body() dto: CreateUserDto) {
     return this.userService.createUser(dto);
   }
+  @ApiOkResponse({ status: 200, description: 'Edits an user' })
+  @Patch('/:userId')
+  editUser(@Param('userId') userId: string, @Body() dto: EditUserDto) {
+    return this.userService.editUser(userId, dto);
+  }
 }
