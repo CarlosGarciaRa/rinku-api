@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { DeliveryService } from './delivery.service';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
@@ -17,8 +18,8 @@ export class DeliveryController {
   constructor(private deliveryService: DeliveryService) {}
 
   @Get()
-  getAllDeliveries() {
-    return this.deliveryService.getAllDeliveries();
+  getAllDeliveries(@Query('userId') userId: string) {
+    return this.deliveryService.getAllDeliveries(userId);
   }
   @Get('/:deliveryId')
   getDelivery(@Param('deliveryId') deliveryId: string) {

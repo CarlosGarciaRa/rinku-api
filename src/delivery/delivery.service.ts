@@ -4,14 +4,29 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { DeliverySerializer } from './serializer';
 import { CreateDeliveryDto, EditDeliveryDto } from './dto';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
+import * as dayjs from 'dayjs';
 
 @Injectable()
 export class DeliveryService {
   constructor(private prisma: PrismaService) {}
 
-  async getAllDeliveries() {
+  async getAllDeliveries(userId?: string, date?: Date) {
     try {
+      // if date is in query
+      let startDate: Date;
+      let endDate: Date;
+      if (date) {
+        startDate = dayjs(date).startOf('month').toDate();
+        endDate = dayjs(date).endOf('month').toDate();
+      }
       const deliveries = await this.prisma.delivery.findMany({
+        where: {
+          userId: userId, // Filtrar por el userId proporcionado
+          date: {
+            gte: startDate,
+            lte: endDate,
+          },
+        },
         include: { user: true },
       });
       return plainToInstance(DeliverySerializer, deliveries, {
