@@ -37,7 +37,7 @@ describe('skillController Int', () => {
   describe('User CRUD', () => {
     it('should create user', async () => {
       const user: CreateUserDto = {
-        name: 'Ususario dummy',
+        name: 'Usuario dummy',
         role: 'driver',
       };
       const response = await request(app.getHttpServer())
