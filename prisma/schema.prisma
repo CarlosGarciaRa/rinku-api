@@ -11,39 +11,27 @@ datasource db {
 }
 
 model User {
-  id                   String                @id @default(uuid())
-  createdAt            DateTime              @default(now())
-  updatedAt            DateTime              @updatedAt
-  email                String                @unique
-  username             String                @unique
-  hash                 String
-  firstName            String
-  lastName             String
-  birthday             DateTime
-  activeStatus         Boolean               @default(false)
-  isEmailConfirmed     Boolean               @default(false)
-  biography            String
-  title                String?                @default("")
-  profilePictureUrl    String                @default("")
-  resumeUrl            String                @default("")
-  role                 Role                  @default(user)
-  projects             Project[]
+  id             String     @id @default(uuid())
+  employeeNumber Int        @unique @default(autoincrement())
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+  name           String
+  role           Role
+  deliveries     Delivery[]
 }
 
-model Project {
-  id                   String                @id @default(uuid())
-  createdAt            DateTime              @default(now())
-  updatedAt            DateTime              @updatedAt
-  userId               String
-  user                 User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
-  title                String
-  description          String
-  paid                 Boolean               @default(false)
-  imageUrl             String                @default("")
-  link                 String?
+model Delivery {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  date      DateTime
+  number    Int
 }
 
 enum Role {
-  user
-  admin
+  driver
+  loader
+  auxiliares
 }
