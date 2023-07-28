@@ -1,7 +1,9 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { SalaryService } from './salary.service';
 import * as dayjs from 'dayjs';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('salaries')
 @Controller('salaries')
 export class SalaryController {
   constructor(private salaryService: SalaryService) {}
