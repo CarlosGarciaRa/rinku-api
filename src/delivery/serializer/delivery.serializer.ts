@@ -1,5 +1,4 @@
 import { Expose, Type } from 'class-transformer';
-import { IsObject } from 'class-validator';
 import { UserSerializer } from 'src/user/serializer';
 
 export class DeliverySerializer {
@@ -16,9 +15,9 @@ export class DeliverySerializer {
   number: number;
 
   @Expose()
-  name: string;
+  date: Date;
 
-  @IsObject()
+  @Expose()
   @Type(() => UserSerializer)
-  programmingLanguages: UserSerializer;
+  user: UserSerializer;
 }
