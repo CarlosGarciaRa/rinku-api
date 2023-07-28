@@ -1,5 +1,3 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { Role } from '@prisma/client';
 import { Expose, Type } from 'class-transformer';
 import { IsObject } from 'class-validator';
 import { UserSerializer } from 'src/user/serializer';

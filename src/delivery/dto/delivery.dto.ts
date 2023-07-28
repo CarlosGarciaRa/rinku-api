@@ -1,5 +1,4 @@
 import { IsString, IsNotEmpty, IsDate } from 'class-validator';
-import { Role } from '@prisma/client';
 import { Transform } from 'class-transformer';
 
 export class CreateDeliveryDto {
