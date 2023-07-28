@@ -99,6 +99,30 @@ describe('skillController Int', () => {
         .send(delivery);
       expect(response.status).toBe(404);
     });
+    it('should fetch all deliveris', async () => {
+      const response = await request(app.getHttpServer()).get(`/deliveries`);
+      expect(response.status).toBe(200);
+      expect(response.body.length).toBeGreaterThan(0);
+      expect(response.body[0].id).toBeDefined();
+      expect(response.body[0].createdAt).toBeDefined();
+      expect(response.body[0].updatedAt).toBeDefined();
+      expect(response.body[0].number).toBe(10);
+      expect(response.body[0].date).toBeDefined();
+      expect(response.body[0].user).toBeDefined();
+    });
+    it('should fetch specific delivery', async () => {
+      const deliveryId: string = (await prisma.delivery.findFirst()).id;
+      const response = await request(app.getHttpServer()).get(
+        `/deliveries/${deliveryId}`,
+      );
+      expect(response.status).toBe(200);
+      expect(response.body.id).toBeDefined();
+      expect(response.body.createdAt).toBeDefined();
+      expect(response.body.updatedAt).toBeDefined();
+      expect(response.body.number).toBe(10);
+      expect(response.body.date).toBeDefined();
+      expect(response.body.user).toBeDefined();
+    });
     it('should delete delivery', async () => {
       const deliveryId: string = (await prisma.delivery.findFirst()).id;
       const response = await request(app.getHttpServer()).delete(

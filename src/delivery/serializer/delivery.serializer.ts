@@ -18,6 +18,12 @@ export class DeliverySerializer {
   date: Date;
 
   @Expose()
+  get doubleNumber(): number {
+    // Realizar el cálculo del doble de 'number'
+    return this.number * 2;
+  }
+
+  @Expose()
   @Type(() => UserSerializer)
   user: UserSerializer;
 }

@@ -11,8 +11,28 @@ export class DeliveryService {
 
   async getAllDeliveries() {
     try {
-      const deliveries = await this.prisma.delivery.findMany();
+      const deliveries = await this.prisma.delivery.findMany({
+        include: { user: true },
+      });
       return plainToInstance(DeliverySerializer, deliveries, {
+        excludeExtraneousValues: true,
+      });
+    } catch (error) {
+      throw error;
+    }
+  }
+  async getDelivery(deliveryId: string) {
+    try {
+      const delivery = await this.prisma.delivery.findUnique({
+        where: { id: deliveryId },
+        include: {
+          user: true,
+        },
+      });
+      if (!delivery) {
+        throw new NotFoundException('Delivery not found');
+      }
+      return plainToInstance(DeliverySerializer, delivery, {
         excludeExtraneousValues: true,
       });
     } catch (error) {
@@ -38,7 +58,7 @@ export class DeliveryService {
         },
       });
       return plainToInstance(DeliverySerializer, newDelivery, {
-        excludeExtraneousValues: true,
+        excludeExtraneousValues: false,
       });
     } catch (error) {
       throw error;

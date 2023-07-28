@@ -20,6 +20,10 @@ export class DeliveryController {
   getAllDeliveries() {
     return this.deliveryService.getAllDeliveries();
   }
+  @Get('/:deliveryId')
+  getDelivery(@Param('deliveryId') deliveryId: string) {
+    return this.deliveryService.getDelivery(deliveryId);
+  }
   @ApiOkResponse({ status: 201, description: 'Create user' })
   @Post()
   createDelivery(@Body() dto: CreateDeliveryDto) {
