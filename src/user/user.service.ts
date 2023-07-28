@@ -23,8 +23,7 @@ export class UserService {
       throw error;
     }
   }
-  async getUser(userId?: string, username?: string) {
-    if (!userId && !username) throw new NotFoundException('User not found');
+  async getUser(userId: string) {
     try {
       const user = await this.prisma.user.findUnique({
         where: { id: userId },
@@ -32,10 +31,7 @@ export class UserService {
       if (!user) {
         throw new NotFoundException('User not found');
       }
-      const userToSend = {
-        ...user,
-      };
-      return plainToInstance(UserSerializer, userToSend, {
+      return plainToInstance(UserSerializer, user, {
         excludeExtraneousValues: true,
       });
     } catch (error) {

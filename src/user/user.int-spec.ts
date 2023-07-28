@@ -79,6 +79,19 @@ describe('skillController Int', () => {
       expect(response.body[0].name).toBe('Usuario dummy Editado');
       expect(response.body[0].role).toBe(Role.auxiliares);
     });
+    it('should fetch single user', async () => {
+      const userId = (await prisma.user.findFirst()).id;
+      const response = await request(app.getHttpServer()).get(
+        `/users/${userId}`,
+      );
+      expect(response.status).toBe(200);
+      expect(response.body.id).toBeDefined();
+      expect(response.body.employeeNumber).toBeDefined();
+      expect(response.body.createdAt).toBeDefined();
+      expect(response.body.updatedAt).toBeDefined();
+      expect(response.body.name).toBe('Usuario dummy Editado');
+      expect(response.body.role).toBe(Role.auxiliares);
+    });
   });
   // describe('Get users', () => {
   //   it('should fetch users', async () => {

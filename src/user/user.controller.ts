@@ -28,6 +28,10 @@ export class UserController {
   getUsers() {
     return this.userService.getAllUsers();
   }
+  @Get('/:userId')
+  getSingleUser(@Param('userId') userId: string) {
+    return this.userService.getUser(userId);
+  }
   @ApiOkResponse({ status: 200, description: 'Create user' })
   @Post()
   createUser(@Body() dto: CreateUserDto) {
