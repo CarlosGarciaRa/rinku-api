@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsDate } from 'class-validator';
+import { IsString, IsNotEmpty, IsDate, IsInt } from 'class-validator';
 import { Transform } from 'class-transformer';
 
 export class CreateDeliveryDto {
@@ -6,9 +6,9 @@ export class CreateDeliveryDto {
   @IsNotEmpty()
   userId: string;
 
-  @IsString()
+  @IsInt()
   @IsNotEmpty()
-  number: string;
+  number: number;
 
   @IsDate()
   @Transform(({ value }) => new Date(value))
