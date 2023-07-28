@@ -16,9 +16,6 @@ export class UserService {
   async getAllUsers() {
     try {
       const users = await this.prisma.user.findMany();
-      if (!users) {
-        throw new NotFoundException('Users not found');
-      }
       return plainToInstance(UserSerializer, users, {
         excludeExtraneousValues: true,
       });
