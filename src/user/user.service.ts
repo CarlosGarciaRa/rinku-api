@@ -13,9 +13,15 @@ import { UploadService } from 'src/upload/upload.service';
 export class UserService {
   constructor(private prisma: PrismaService, private upload: UploadService) {}
 
-  async getAllUsers() {
+  async getAllUsers(name?: string) {
     try {
       const users = await this.prisma.user.findMany({
+        where: {
+          name: {
+            contains: name, // Buscar coincidencia parcial con el nombre
+            mode: 'insensitive', // Hacer que la búsqueda no sea sensible a mayúsculas y minúsculas
+          },
+        },
         orderBy: {
           employeeNumber: 'asc',
         },
