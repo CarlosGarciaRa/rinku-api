@@ -35,7 +35,7 @@ CMD [ "yarn", "start:dev" ]
 FROM development AS build
 
 RUN yarn build
-RUN yarn install --production && && yarn cache clean
+RUN yarn install --production && yarn cache clean
 
 # ------------------------------------- - ------------------------------------ #
 # ---------------------------- Stage de producción --------------------------- #
