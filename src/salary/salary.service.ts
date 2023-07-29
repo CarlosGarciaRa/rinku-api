@@ -63,8 +63,11 @@ export class SalaryService {
   }
   getBonusByRole(role: Role) {
     if (role === Role.auxiliares) return 0;
-    else if (role === Role.driver) return 500 * this.hoursWorked; // $5
-    else if (role === Role.loader) return 1000 * this.hoursWorked; // $10
+    else if (role === Role.driver)
+      return 500 * this.hoursWorked * this.daysWorked * this.weeksWorked;
+    // $5
+    else if (role === Role.loader)
+      return 1000 * this.hoursWorked * this.daysWorked * this.weeksWorked; // $10
   }
   isrReatined(totalSalary: number) {
     return {
