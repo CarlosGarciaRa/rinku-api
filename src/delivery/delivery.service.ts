@@ -27,8 +27,12 @@ export class DeliveryService {
             lte: endDate,
           },
         },
+        orderBy: {
+          date: 'asc',
+        },
         include: { user: true },
       });
+
       return plainToInstance(DeliverySerializer, deliveries, {
         excludeExtraneousValues: true,
       });
