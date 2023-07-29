@@ -21,6 +21,10 @@ export class DeliveryController {
   getAllDeliveries(@Query('userId') userId: string) {
     return this.deliveryService.getAllDeliveries(userId);
   }
+  @Get('/grouped_by_user')
+  getDeliveriesGrouped() {
+    return this.deliveryService.getDeliveriesGroupedByUser();
+  }
   @Get('/:deliveryId')
   getDelivery(@Param('deliveryId') deliveryId: string) {
     return this.deliveryService.getDelivery(deliveryId);

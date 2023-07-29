@@ -1,10 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { DeliverySerializer } from './serializer';
+import { DeliverySerializer, GroupedDeliverySerializer } from './serializer';
 import { CreateDeliveryDto, EditDeliveryDto } from './dto';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 import * as dayjs from 'dayjs';
+import { Delivery, Prisma } from '@prisma/client';
 
 @Injectable()
 export class DeliveryService {
@@ -34,6 +35,46 @@ export class DeliveryService {
       });
 
       return plainToInstance(DeliverySerializer, deliveries, {
+        excludeExtraneousValues: true,
+      });
+    } catch (error) {
+      throw error;
+    }
+  }
+  async getDeliveriesGroupedByUser() {
+    try {
+      const sql = Prisma.sql`
+      SELECT
+        u."id" as "user.id",
+        u."employeeNumber" as "user.employeeNumber",
+        u."name" as "user.name",
+        u."role" as "user.role",
+        CAST(SUM(d."number") as INTEGER) as "totalDeliveries"
+      FROM
+        "Delivery" d
+      INNER JOIN
+        "User" u ON d."userId" = u."id"
+      GROUP BY
+      u."id", u.name;
+    `;
+      const deliveries: Delivery[] = await this.prisma.$queryRaw(sql);
+      const tr = deliveries.map((row) => ({
+        id: row.id,
+        createdAt: row.createdAt,
+        updatedAt: row.updatedAt,
+        date: row.date,
+        totalDeliveries: row['totalDeliveries'],
+        user: {
+          id: row['user.id'],
+          createdAt: row['user.createdAt'],
+          updatedAt: row['user.updatedAt'],
+          employeeNumber: row['user.employeeNumber'],
+          name: row['user.name'],
+          role: row['user.role'],
+        },
+      }));
+
+      return plainToInstance(GroupedDeliverySerializer, tr, {
         excludeExtraneousValues: true,
       });
     } catch (error) {
