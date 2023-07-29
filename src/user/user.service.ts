@@ -13,19 +13,32 @@ import { UploadService } from 'src/upload/upload.service';
 export class UserService {
   constructor(private prisma: PrismaService, private upload: UploadService) {}
 
-  async getAllUsers(name?: string) {
+  async getAllUsers(userquery?: string) {
     try {
-      const users = await this.prisma.user.findMany({
-        where: {
-          name: {
-            contains: name, // Buscar coincidencia parcial con el nombre
-            mode: 'insensitive', // Hacer que la búsqueda no sea sensible a mayúsculas y minúsculas
+      let users;
+      if (userquery) {
+        users = await this.prisma.user.findMany({
+          where: {
+            OR: [
+              { name: { contains: userquery, mode: 'insensitive' } }, // Búsqueda por nombre
+              {
+                employeeNumber: {
+                  equals: +userquery || undefined,
+                },
+              }, // Búsqueda por employeeNumber
+            ],
           },
-        },
-        orderBy: {
-          employeeNumber: 'asc',
-        },
-      });
+          orderBy: {
+            employeeNumber: 'asc',
+          },
+        });
+      } else {
+        users = await this.prisma.user.findMany({
+          orderBy: {
+            employeeNumber: 'asc',
+          },
+        });
+      }
       return plainToInstance(UserSerializer, users, {
         excludeExtraneousValues: true,
       });
