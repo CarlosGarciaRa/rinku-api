@@ -15,7 +15,11 @@ export class UserService {
 
   async getAllUsers() {
     try {
-      const users = await this.prisma.user.findMany();
+      const users = await this.prisma.user.findMany({
+        orderBy: {
+          employeeNumber: 'asc',
+        },
+      });
       return plainToInstance(UserSerializer, users, {
         excludeExtraneousValues: true,
       });
