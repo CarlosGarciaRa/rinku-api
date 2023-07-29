@@ -1,7 +1,7 @@
 version: '3.8'
 services:
-  dev-db:
-    container_name: dev-db
+  db:
+    container_name: db
     image: postgres:13
     ports:
       - 5434:5432
@@ -11,24 +11,17 @@ services:
       POSTGRES_DB: portfolio
     volumes:
       - postgres_data:/var/lib/postgresql/data
-  test-db:
-    image: postgres:13
-    ports:
-      - 5435:5432
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 123
-      POSTGRES_DB: portfolio
+
   nest-api:
     build:
       context: .
       dockerfile: Dockerfile
-      target: development
+      target: production
     ports:
       - 3000:3000
-      - 5555:5555
+      # - 5555:5555
     depends_on:
-      - dev-db
+      - db
     env_file:
       - .env
     volumes:
@@ -36,5 +29,31 @@ services:
       - /app/node_modules
       - ./prisma:/app/prisma
       - ./uploads:/app/uploads
+    environment:
+      VIRTUAL_HOST: testsystems.xyz
+      LETSENCRYPT_HOST: testsystems.xyz
+      LETSENCRYPT_EMAIL: carlos.garcia.ra@outlook.com
+
+  nginx-proxy:
+    image: jwilder/nginx-proxy
+    container_name: nginx-proxy
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "/var/run/docker.sock:/tmp/docker.sock:ro"
+      - "/etc/nginx/vhost.d"
+      - "/usr/share/nginx/html"
+      - "/etc/nginx/certs/"
+
+  letsencrypt-nginx-proxy-companion:
+    image: jrcs/letsencrypt-nginx-proxy-companion
+    restart: always
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    volumes_from:
+      - "nginx-proxy"
+
 volumes:
   postgres_data:
